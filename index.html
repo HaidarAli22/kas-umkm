@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kas UMKM</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section id="splash" class="splash">
+      <div class="splash-content">
+        <div class="brand-mark large">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 15.5V11a3 3 0 0 1 3-3h25" />
+            <path
+              d="M8 15.5h29a3 3 0 0 1 3 3V37a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15.5Z"
+            />
+            <path d="M31 24h9v8h-9a4 4 0 0 1 0-8Z" />
+            <circle cx="32" cy="28" r="1" class="logo-dot" />
+          </svg>
+        </div>
+        <p class="eyebrow">PEMBUKUAN DIGITAL</p>
+        <h1>Kas<span>UMKM</span></h1>
+        <p class="splash-subtitle">Kelola kas usaha dengan lebih mudah.</p>
+        <div class="loading-track"><span></span></div>
+      </div>
+    </section>
+
+    <section id="auth" class="auth is-hidden">
+      <div class="auth-card">
+        <div class="brand-mark large">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 15.5V11a3 3 0 0 1 3-3h25" />
+            <path
+              d="M8 15.5h29a3 3 0 0 1 3 3V37a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15.5Z"
+            />
+            <path d="M31 24h9v8h-9a4 4 0 0 1 0-8Z" />
+            <circle cx="32" cy="28" r="1" class="logo-dot" />
+          </svg>
+        </div>
+        <h1 class="auth-title">Kas<span>UMKM</span></h1>
+        <p class="muted auth-subtitle">Masuk untuk mengelola kas usahamu.</p>
+
+        <div class="auth-tabs">
+          <button type="button" id="tab-login" class="auth-tab active">
+            Masuk
+          </button>
+          <button type="button" id="tab-register" class="auth-tab">
+            Daftar
+          </button>
+        </div>
+
+        <form id="form-auth" class="auth-form">
+          <label
+            >Email<input
+              type="email"
+              id="auth-email"
+              autocomplete="email"
+              placeholder="nama@email.com"
+              required
+          /></label>
+          <label
+            >Kata sandi<input
+              type="password"
+              id="auth-password"
+              autocomplete="current-password"
+              placeholder="Minimal 6 karakter"
+              minlength="6"
+              required
+          /></label>
+          <label id="auth-konfirmasi-wrap" class="is-hidden"
+            >Ulangi kata sandi<input
+              type="password"
+              id="auth-konfirmasi"
+              autocomplete="new-password"
+              placeholder="Ketik ulang kata sandi"
+          /></label>
+          <button type="submit" class="primary-button" id="auth-submit">
+            Masuk
+          </button>
+        </form>
+        <p id="auth-pesan" class="auth-pesan"></p>
+      </div>
+    </section>
+
+    <div id="app-shell" class="app-shell is-hidden">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="btn-menu">☰</button>
+        <a class="brand" href="#" id="brand-home">
+          <span class="brand-mark small">
+            <svg viewBox="0 0 48 48" fill="none">
+              <path d="M8 15.5V11a3 3 0 0 1 3-3h25" />
+              <path
+                d="M8 15.5h29a3 3 0 0 1 3 3V37a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15.5Z"
+              />
+              <path d="M31 24h9v8h-9a4 4 0 0 1 0-8Z" />
+              <circle cx="32" cy="28" r="1" class="logo-dot" />
+            </svg>
+          </span>
+          <span>Kas<span class="brand-accent">UMKM</span></span>
+        </a>
+        <div class="topbar-right">
+          <span class="user-email" id="user-email"></span>
+          <button
+            class="logout-button"
+            id="btn-logout"
+            title="Keluar"
+            aria-label="Keluar"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+              <path d="m16 17 5-5-5-5" />
+              <path d="M21 12H9" />
+            </svg>
+            <span class="logout-label">Keluar</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="layout">
+        <aside class="sidebar" id="sidebar">
+          <p class="nav-caption">MENU UTAMA</p>
+          <button class="nav-item active" data-view="beranda">
+            <span
+              ><svg
+                viewBox="0 0 24 24"
+                width="19"
+                height="19"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 10.5 12 3l9 7.5" />
+                <path
+                  d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"
+                /></svg></span
+            >Dashboard
+          </button>
+          <button class="nav-item" data-view="input">
+            <span>＋</span>Input Transaksi
+          </button>
+          <button class="nav-item" data-view="riwayat">
+            <span>↻</span>Riwayat
+          </button>
+          <p class="nav-caption nav-caption-spaced">PEMBUKUAN</p>
+          <button class="nav-item" data-view="utang">
+            <span>↗</span>Utang
+          </button>
+          <button class="nav-item" data-view="piutang">
+            <span>↙</span>Piutang
+          </button>
+          <div class="sidebar-footer">KAS UMKM v1.0</div>
+        </aside>
+
+        <main class="main-content">
+          <section class="view active" id="view-beranda">
+            <div class="page-heading">
+              <div>
+                <h1>Dashboard</h1>
+                <p class="muted">Pantau kondisi keuangan usahamu.</p>
+              </div>
+              <div class="date-chip"><span id="tanggal-hari"></span></div>
+            </div>
+
+            <div class="summary-grid">
+              <article class="summary-card balance-card">
+                <div class="summary-top">
+                  <span>Saldo Kas</span><span class="summary-icon">▣</span>
+                </div>
+                <p class="summary-value" id="saldo">Rp 0</p>
+              </article>
+              <article class="summary-card">
+                <div class="summary-top">
+                  <span>Modal</span><span class="summary-icon">◈</span>
+                </div>
+                <p class="summary-value" id="modal">Rp 0</p>
+              </article>
+              <article class="summary-card laba-card">
+                <div class="summary-top">
+                  <span>Laba</span><span class="summary-icon positive">↗</span>
+                </div>
+                <p class="summary-value positive-text" id="laba">Rp 0</p>
+              </article>
+              <article class="summary-card rugi-card">
+                <div class="summary-top">
+                  <span>Rugi</span><span class="summary-icon negative">↘</span>
+                </div>
+                <p class="summary-value negative-text" id="rugi">Rp 0</p>
+              </article>
+            </div>
+
+            <article class="panel chart-panel">
+              <div class="panel-heading">
+                <h2>Arus Kas</h2>
+                <p class="muted">Perbandingan kas masuk dan keluar</p>
+              </div>
+              <div class="chart-area">
+                <div id="pie" class="donut">
+                  <div class="donut-center">
+                    <span>Total</span><strong id="total-arus">Rp 0</strong>
+                  </div>
+                </div>
+                <div class="legend">
+                  <div>
+                    <span class="legend-swatch inflow"></span><span>Masuk</span
+                    ><strong id="total-masuk">Rp 0</strong>
+                  </div>
+                  <div>
+                    <span class="legend-swatch outflow"></span
+                    ><span>Keluar</span><strong id="total-keluar">Rp 0</strong>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel recent-panel">
+              <div class="panel-heading">
+                <h2>Transaksi Terbaru</h2>
+                <button class="link-button" data-view="riwayat">
+                  Lihat semua →
+                </button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Transaksi</th>
+                      <th>Tanggal</th>
+                      <th>Jenis</th>
+                      <th class="col-num">Nominal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="transaksi-terbaru">
+                    <tr>
+                      <td colspan="4" class="empty-cell">
+                        Belum ada transaksi
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </article>
+          </section>
+
+          <section class="view" id="view-input">
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">INPUT</p>
+                <h1>Transaksi Baru</h1>
+              </div>
+            </div>
+            <form id="form-transaksi" class="panel">
+              <label
+                >Jenis<select name="jenis" id="jenis" required>
+                  <option value="debit">Debit</option>
+                  <option value="kredit">Kredit</option>
+                </select></label
+              >
+              <div class="form-row">
+                <label
+                  >Tanggal<input
+                    type="date"
+                    name="tanggal"
+                    id="tanggal"
+                    required
+                /></label>
+                <label
+                  >Nominal<input type="number" name="jumlah" min="1" required
+                /></label>
+              </div>
+              <label
+                >Kategori<select name="kategori" id="kategori" required></select
+              ></label>
+              <label
+                >Keterangan<textarea name="keterangan" rows="3"></textarea>
+              </label>
+              <button class="primary-button" type="submit">Simpan</button>
+            </form>
+          </section>
+
+          <section class="view" id="view-riwayat">
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">RIWAYAT</p>
+                <h1>Transaksi</h1>
+              </div>
+              <button class="primary-button compact" data-view="input">
+                ＋ Baru
+              </button>
+            </div>
+            <div class="panel">
+              <div class="history-toolbar">
+                <label class="search-box"
+                  ><input type="search" id="cari" placeholder="Cari..."
+                /></label>
+                <span id="jumlah-riwayat" class="muted">0</span>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Transaksi</th>
+                      <th>Tanggal</th>
+                      <th>Jenis</th>
+                      <th class="col-num">Nominal</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody id="daftar-riwayat"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="view" id="view-utang">
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">UTANG</p>
+                <h1>Utang Usaha</h1>
+              </div>
+            </div>
+            <div class="debt-total-panel">
+              <strong id="total-utang">Rp 0</strong>
+            </div>
+            <div class="panel">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Keterangan</th>
+                      <th>Tanggal</th>
+                      <th class="col-num">Nominal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="daftar-utang"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section class="view" id="view-piutang">
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">PIUTANG</p>
+                <h1>Piutang</h1>
+              </div>
+            </div>
+            <div class="debt-total-panel receivable">
+              <strong id="total-piutang">Rp 0</strong>
+            </div>
+            <div class="panel">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Keterangan</th>
+                      <th>Tanggal</th>
+                      <th class="col-num">Nominal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="daftar-piutang"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+      <div id="toast" class="toast"></div>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
