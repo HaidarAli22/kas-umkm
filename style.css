@@ -1,3 +1,4 @@
+/* style.css: tampilan aplikasi. Variabel warna & ukuran */
 :root {
   --bg: #ffffff;
   --bg-soft: #f8f9fa;
@@ -19,6 +20,7 @@
   --radius: 16px;
 }
 
+/* Pengaturan dasar */
 * {
   box-sizing: border-box;
 }
@@ -51,6 +53,7 @@ input:focus-visible {
   outline: 2px solid var(--green);
   outline-offset: 3px;
 }
+/* Class bantu */
 .is-hidden {
   display: none !important;
 }
@@ -65,7 +68,7 @@ input:focus-visible {
   letter-spacing: 0.19em;
 }
 
-/* Splash */
+/* Splash screen */
 .splash {
   position: fixed;
   inset: 0;
@@ -88,6 +91,7 @@ input:focus-visible {
   padding: 24px;
   animation: rise-in 0.8s ease;
 }
+/* Logo */
 .brand-mark {
   display: grid;
   place-items: center;
@@ -151,6 +155,7 @@ input:focus-visible {
   color: var(--green);
 }
 
+/* Animasi */
 @keyframes pulse {
   0%,
   100% {
@@ -254,7 +259,7 @@ input:focus-visible {
   font-weight: 800;
 }
 
-/* Layout */
+/* Layout & sidebar */
 .layout {
   display: flex;
   min-height: calc(100vh - 72px);
@@ -279,6 +284,7 @@ input:focus-visible {
 .nav-caption-spaced {
   margin-top: 29px;
 }
+/* Menu sidebar */
 .nav-item {
   display: flex;
   align-items: center;
@@ -326,7 +332,7 @@ input:focus-visible {
   padding: 35px clamp(20px, 3vw, 46px) 18px;
 }
 
-/* Views */
+/* Pindah halaman: hanya .active yang tampil */
 .view {
   display: none;
   animation: fadeIn 0.3s ease;
@@ -345,6 +351,7 @@ input:focus-visible {
   }
 }
 
+/* Judul halaman */
 .page-heading {
   display: flex;
   align-items: center;
@@ -368,7 +375,7 @@ input:focus-visible {
   font-size: 11px;
 }
 
-/* Cards */
+/* Kartu ringkasan */
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -456,7 +463,7 @@ input:focus-visible {
   font-size: 11px;
 }
 
-/* Chart */
+/* Grafik donat (conic-gradient) */
 .chart-area {
   display: flex;
   align-items: center;
@@ -544,7 +551,7 @@ input:focus-visible {
   text-decoration: underline;
 }
 
-/* Forms */
+/* Form & tombol */
 label {
   display: grid;
   gap: 8px;
@@ -616,7 +623,7 @@ textarea:focus {
   white-space: nowrap;
 }
 
-/* Tables */
+/* Tabel */
 .table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -690,6 +697,7 @@ tbody tr:hover td {
   color: var(--muted);
   text-align: center;
 }
+/* Pencarian & tombol hapus */
 .history-toolbar {
   display: flex;
   justify-content: space-between;
@@ -728,7 +736,7 @@ tbody tr:hover td {
   color: white;
 }
 
-/* Debt/Piutang */
+/* Total utang/piutang */
 .debt-total-panel {
   display: flex;
   align-items: center;
@@ -748,7 +756,7 @@ tbody tr:hover td {
   color: var(--text);
 }
 
-/* Auth (login & register) */
+/* Halaman login */
 .auth {
   position: fixed;
   inset: 0;
@@ -870,7 +878,7 @@ tbody tr:hover td {
   background: var(--red);
 }
 
-/* Toast */
+/* Notifikasi */
 .toast {
   position: fixed;
   right: 22px;
@@ -894,7 +902,7 @@ tbody tr:hover td {
   transform: translateY(0);
 }
 
-/* Responsive */
+/* Responsif (tablet & HP) */
 @media (max-width: 1180px) {
   .summary-grid {
     grid-template-columns: repeat(2, 1fr);

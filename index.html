@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- index.html: kerangka tampilan; isi diisi app.js -->
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- Splash screen -->
     <section id="splash" class="splash">
       <div class="splash-content">
         <div class="brand-mark large">
@@ -26,6 +28,7 @@
       </div>
     </section>
 
+    <!-- Login / Daftar -->
     <section id="auth" class="auth is-hidden">
       <div class="auth-card">
         <div class="brand-mark large">
@@ -83,7 +86,9 @@
       </div>
     </section>
 
+    <!-- Aplikasi utama (setelah login) -->
     <div id="app-shell" class="app-shell is-hidden">
+      <!-- Topbar -->
       <header class="topbar">
         <button class="icon-button menu-button" id="btn-menu">☰</button>
         <a class="brand" href="#" id="brand-home">
@@ -127,6 +132,7 @@
       </header>
 
       <div class="layout">
+        <!-- Sidebar menu -->
         <aside class="sidebar" id="sidebar">
           <p class="nav-caption">MENU UTAMA</p>
           <button class="nav-item active" data-view="beranda">
@@ -164,6 +170,7 @@
         </aside>
 
         <main class="main-content">
+          <!-- Halaman Dashboard -->
           <section class="view active" id="view-beranda">
             <div class="page-heading">
               <div>
@@ -200,6 +207,7 @@
               </article>
             </div>
 
+            <!-- Grafik arus kas -->
             <article class="panel chart-panel">
               <div class="panel-heading">
                 <h2>Arus Kas</h2>
@@ -224,6 +232,7 @@
               </div>
             </article>
 
+            <!-- Transaksi terbaru -->
             <article class="panel recent-panel">
               <div class="panel-heading">
                 <h2>Transaksi Terbaru</h2>
@@ -253,6 +262,7 @@
             </article>
           </section>
 
+          <!-- Halaman Input Transaksi -->
           <section class="view" id="view-input">
             <div class="page-heading">
               <div>
@@ -289,6 +299,7 @@
             </form>
           </section>
 
+          <!-- Halaman Riwayat -->
           <section class="view" id="view-riwayat">
             <div class="page-heading">
               <div>
@@ -323,6 +334,7 @@
             </div>
           </section>
 
+          <!-- Halaman Utang -->
           <section class="view" id="view-utang">
             <div class="page-heading">
               <div>
@@ -349,6 +361,7 @@
             </div>
           </section>
 
+          <!-- Halaman Piutang -->
           <section class="view" id="view-piutang">
             <div class="page-heading">
               <div>
@@ -376,8 +389,10 @@
           </section>
         </main>
       </div>
+      <!-- Notifikasi -->
       <div id="toast" class="toast"></div>
     </div>
+    <!-- Muat app.js -->
     <script type="module" src="app.js"></script>
   </body>
 </html>
