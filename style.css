@@ -4,7 +4,6 @@
   --bg-soft: #f8f9fa;
   --panel: #ffffff;
   --line: #e5e7eb;
-  --line-bright: #d1d5db;
   --green: #00b368;
   --green-soft: rgba(0, 179, 104, 0.08);
   --green-border: rgba(0, 179, 104, 0.25);
@@ -16,8 +15,26 @@
   --red-soft: rgba(220, 38, 38, 0.08);
   --red-border: rgba(220, 38, 38, 0.25);
   --amber: #d97706;
-  --amber-soft: rgba(217, 119, 6, 0.08);
+  --blue: #2563eb;
   --radius: 16px;
+  --topbar: rgba(255, 255, 255, 0.95);
+}
+
+/* Tema gelap: cukup mengganti variabel warna */
+:root[data-tema="dark"] {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --bg-soft: #14171d;
+  --panel: #181b22;
+  --line: #2a2f3a;
+  --text: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --muted: #9ca3af;
+  --muted-light: #6b7280;
+  --red: #f87171;
+  --red-soft: rgba(248, 113, 113, 0.12);
+  --red-border: rgba(248, 113, 113, 0.3);
+  --topbar: rgba(15, 17, 21, 0.92);
 }
 
 /* Pengaturan dasar */
@@ -101,8 +118,9 @@ input:focus-visible {
   width: 100%;
   height: 100%;
   stroke: currentColor;
-  stroke-width: 2.6;
+  stroke-width: 2;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .brand-mark.large {
   width: 70px;
@@ -143,16 +161,6 @@ input:focus-visible {
   background: var(--green);
   border-radius: inherit;
   animation: slide 1.25s infinite;
-}
-.text-button {
-  margin-top: 24px;
-  padding: 7px 12px;
-  color: var(--muted);
-  border: 0;
-  background: transparent;
-}
-.text-button:hover {
-  color: var(--green);
 }
 
 /* Animasi */
@@ -195,7 +203,7 @@ input:focus-visible {
   height: 72px;
   padding: 0 30px;
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--topbar);
   backdrop-filter: blur(18px);
 }
 .brand {
@@ -240,24 +248,6 @@ input:focus-visible {
   color: var(--muted);
   font-size: 11px;
 }
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--green);
-}
-.avatar {
-  display: grid;
-  place-items: center;
-  width: 33px;
-  height: 33px;
-  margin-left: 12px;
-  border: 2px solid var(--green);
-  border-radius: 50%;
-  background: var(--green-soft);
-  color: var(--green);
-  font-weight: 800;
-}
 
 /* Layout & sidebar */
 .layout {
@@ -280,9 +270,6 @@ input:focus-visible {
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.17em;
-}
-.nav-caption-spaced {
-  margin-top: 29px;
 }
 /* Menu sidebar */
 .nav-item {
@@ -419,9 +406,6 @@ input:focus-visible {
   background: var(--green-soft);
   font-size: 17px;
 }
-.summary-icon.positive {
-  color: var(--green);
-}
 .summary-icon.negative {
   color: var(--red);
   border-color: var(--red-border);
@@ -457,10 +441,6 @@ input:focus-visible {
   margin: 0;
   font-size: 15px;
   color: var(--text);
-}
-.panel-heading .muted {
-  margin: 7px 0 0;
-  font-size: 11px;
 }
 
 /* Grafik donat (conic-gradient) */
@@ -527,6 +507,12 @@ input:focus-visible {
 .legend-swatch.outflow {
   background: var(--muted-light);
 }
+.legend-swatch.utang {
+  background: var(--amber);
+}
+.legend-swatch.piutang {
+  background: var(--blue);
+}
 .legend > div > span:nth-child(2) {
   color: var(--muted);
   font-size: 10px;
@@ -592,9 +578,6 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-#form-transaksi .primary-button {
-  align-self: flex-start;
 }
 .primary-button {
   display: inline-flex;
@@ -734,26 +717,6 @@ tbody tr:hover td {
 .delete-button:hover {
   background: var(--red);
   color: white;
-}
-
-/* Total utang/piutang */
-.debt-total-panel {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 17px;
-  padding: 21px 24px;
-  border: 1px solid rgba(217, 119, 6, 0.25);
-  border-radius: var(--radius);
-  background: var(--amber-soft);
-}
-.debt-total-panel.receivable {
-  border-color: var(--green-border);
-  background: var(--green-soft);
-}
-.debt-total-panel strong {
-  font-size: 23px;
-  color: var(--text);
 }
 
 /* Halaman login */
@@ -902,6 +865,137 @@ tbody tr:hover td {
   transform: translateY(0);
 }
 
+/* Ikon (Lucide): ukuran & garis; tombol ganti tema (bulan/matahari) */
+.ikon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nav-item > span .ikon {
+  width: 19px;
+  height: 19px;
+}
+.summary-icon .ikon {
+  width: 17px;
+  height: 17px;
+}
+.transaction-symbol .ikon {
+  width: 16px;
+  height: 16px;
+}
+.logout-button .ikon {
+  width: 16px;
+  height: 16px;
+}
+.primary-button .ikon {
+  width: 15px;
+  height: 15px;
+}
+.link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.link-button .ikon {
+  width: 13px;
+  height: 13px;
+}
+.edit-button,
+.delete-button {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+}
+.edit-button .ikon,
+.delete-button .ikon {
+  width: 14px;
+  height: 14px;
+}
+.icon-sun,
+:root[data-tema="dark"] .icon-moon {
+  display: none;
+}
+:root[data-tema="dark"] .icon-sun {
+  display: block;
+}
+
+/* Form: tombol Simpan + Batal (mode edit) */
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+.ghost-button {
+  padding: 13px 17px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 700;
+}
+.ghost-button:hover {
+  color: var(--text);
+}
+
+/* Riwayat: filter, ringkasan, tombol edit */
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.filter-row label {
+  flex: 1;
+  min-width: 130px;
+}
+.sum-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.sum-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 11px;
+}
+.sum-chip strong {
+  font-size: 13px;
+}
+#sum-bersih {
+  color: var(--text);
+}
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.edit-button {
+  width: 29px;
+  height: 29px;
+  color: var(--green);
+  border: 1px solid var(--green-border);
+  border-radius: 8px;
+  background: var(--green-soft);
+  font-size: 14px;
+  transition: 0.2s;
+}
+.edit-button:hover {
+  background: var(--green);
+  color: white;
+}
+
 /* Responsif (tablet & HP) */
 @media (max-width: 1180px) {
   .summary-grid {
@@ -939,7 +1033,6 @@ tbody tr:hover td {
   }
 }
 @media (max-width: 560px) {
-  .status-text,
   .user-email,
   .logout-label {
     display: none;

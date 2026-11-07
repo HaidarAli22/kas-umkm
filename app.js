@@ -4,8 +4,7 @@ import {
   getFirestore,
   collection,
   addDoc,
-  query,
-  orderBy,
+  updateDoc,
   onSnapshot,
   deleteDoc,
   doc,
@@ -42,6 +41,7 @@ let dataSiap = false;
 let toastTimer;
 let transaksiRef = null; // diisi sesuai akun yang masuk
 let unsub = null; // penghenti listener Firestore
+let editId = null; // id transaksi yang sedang diedit (null = transaksi baru)
 
 // Format angka ke Rupiah
 const rupiah = (n) =>
@@ -51,37 +51,42 @@ const rupiah = (n) =>
     maximumFractionDigits: 0,
   }).format(Number(n) || 0);
 
-// Tanggal hari ini (YYYY-MM-DD)
-const isoHariIni = () => {
-  const d = new Date();
-  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-  return d.toISOString().slice(0, 10);
+// Date -> teks YYYY-MM-DD (zona waktu lokal)
+const isoDari = (d) => {
+  const x = new Date(d);
+  x.setMinutes(x.getMinutes() - x.getTimezoneOffset());
+  return x.toISOString().slice(0, 10);
 };
+const isoHariIni = () => isoDari(new Date());
 
-// Format tanggal ke teks Indonesia
-const tanggalTeks = (t) => {
+// Ambil tanggal transaksi sebagai Date (null jika kosong/tidak valid)
+const tanggalObj = (t) => {
   const d = t.tanggal?.toDate
     ? t.tanggal.toDate()
     : t.tanggal
       ? new Date(t.tanggal)
       : null;
-  return d && !Number.isNaN(d.getTime())
-    ? d.toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      })
-    : "—";
+  return d && !Number.isNaN(d.getTime()) ? d : null;
 };
+const ymd = (t) => (tanggalObj(t) ? isoDari(tanggalObj(t)) : "");
 
-// Waktu jadi milidetik (untuk sorting)
-const ms = (ts) => {
-  if (!ts) return 0;
-  if (ts.toMillis) return ts.toMillis();
-  if (ts.toDate) return ts.toDate().getTime();
-  const d = new Date(ts);
-  return Number.isNaN(d.getTime()) ? 0 : d.getTime();
-};
+// Ikon dari Lucide (lucide.dev); gambarnya didefinisikan di index.html (<symbol id="i-...">)
+const svgIkon = (nama) => `<svg class="ikon"><use href="#i-${nama}" /></svg>`;
+
+// Format tanggal ke teks Indonesia
+const tanggalTeks = (t) =>
+  tanggalObj(t)?.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  }) ?? "—";
+
+// Urutan terbaru dulu: tanggal transaksi, lalu waktu dicatat (agar transaksi di hari yang sama tidak acak)
+const waktu = (ts) =>
+  ts?.toMillis ? ts.toMillis() : ts ? new Date(ts).getTime() || 0 : 0;
+const urutTerbaru = (a, b) =>
+  waktu(b.tanggal) - waktu(a.tanggal) ||
+  waktu(b.dibuatPada) - waktu(a.dibuatPada);
 
 // Aturan tiap kategori: dampak ke kas, utang, piutang, laba-rugi, modal
 const KATEGORI = {
@@ -90,6 +95,7 @@ const KATEGORI = {
   Piutang: { jenis: "debit", kas: 0, piutang: 1 },
   "Terima Piutang": { jenis: "debit", kas: 1, piutang: -1, pendapatan: 1 },
   Kulakan: { jenis: "kredit", kas: -1, beban: 1 },
+  "Biaya Operasional": { jenis: "kredit", kas: -1, beban: 1 },
   Utang: { jenis: "kredit", kas: 0, utang: 1 },
   "Bayar Utang": { jenis: "kredit", kas: -1, utang: -1, beban: 1 },
 };
@@ -127,10 +133,8 @@ const totalProperti = (prop) =>
     return info && info[prop] ? s + info[prop] * (Number(t.jumlah) || 0) : s;
   }, 0);
 
-// Validasi lalu simpan ke Firestore
-async function tambahTransaksi(data) {
-  if (!transaksiRef) throw new Error("Sesi berakhir, silakan masuk lagi.");
-
+// Periksa input; hasilnya data siap simpan
+function validasi(data) {
   const jumlah = Number(data.jumlah);
   if (!Number.isSafeInteger(jumlah) || jumlah <= 0)
     throw new Error("Nominal harus berupa bilangan bulat positif.");
@@ -143,14 +147,21 @@ async function tambahTransaksi(data) {
   const tanggal = new Date(`${data.tanggal}T00:00:00`);
   if (Number.isNaN(tanggal.getTime())) throw new Error("Tanggal tidak valid.");
 
-  await addDoc(transaksiRef, {
+  return {
     jenis: data.jenis,
     kategori: data.kategori,
     tanggal: Timestamp.fromDate(tanggal),
     jumlah,
     keterangan: String(data.keterangan || "").trim(),
-    dibuatPada: serverTimestamp(),
-  });
+  };
+}
+
+// Simpan ke Firestore: transaksi baru (addDoc) atau perubahan (updateDoc)
+async function simpanTransaksi(data) {
+  if (!transaksiRef) throw new Error("Sesi berakhir, silakan masuk lagi.");
+  const isi = validasi(data);
+  if (editId) await updateDoc(doc(transaksiRef, editId), isi);
+  else await addDoc(transaksiRef, { ...isi, dibuatPada: serverTimestamp() });
 }
 
 // Notifikasi kecil 3 detik
@@ -211,10 +222,10 @@ function kosong(tbody, kolom, pesan = "Belum ada transaksi") {
 // Sel nama: ikon + kategori + keterangan
 function selNama(t) {
   const k = nilaiKas(t);
-  const ikon = k > 0 ? "↗" : k < 0 ? "↘" : "•";
+  const ikon = k > 0 ? "arrow-up-right" : k < 0 ? "arrow-down-right" : "minus";
   const td = document.createElement("td");
   td.innerHTML = `<div class="transaction-name">
-      <span class="transaction-symbol">${ikon}</span>
+      <span class="transaction-symbol">${svgIkon(ikon)}</span>
       <div><strong></strong><small></small></div>
     </div>`;
   td.querySelector("strong").textContent = t.kategori || "Transaksi";
@@ -242,29 +253,45 @@ function renderTerbaru() {
   );
 }
 
-// Tabel riwayat: cari, urut, hapus
+// Kosongkan semua filter riwayat (tanpa menggambar ulang)
+function resetFilter() {
+  ["cari", "filter-dari", "filter-sampai"].forEach((id) => ($(id).value = ""));
+}
+
+// Tabel riwayat: cari + filter tanggal, ringkasan masuk/keluar, edit, hapus
 function renderRiwayat() {
   const tbody = $("daftar-riwayat");
   const kata = $("cari").value.trim().toLocaleLowerCase("id-ID");
-  const list = semua
-    .filter((t) =>
+  const dari = $("filter-dari").value;
+  const sampai = $("filter-sampai").value;
+  const list = semua.filter((t) => {
+    const tgl = ymd(t);
+    return (
+      (!dari || (tgl && tgl >= dari)) &&
+      (!sampai || (tgl && tgl <= sampai)) &&
       [t.kategori, t.keterangan, jenisTeks(t)]
         .filter(Boolean)
         .join(" ")
         .toLocaleLowerCase("id-ID")
-        .includes(kata),
-    )
-    .sort(
-      (a, b) =>
-        ms(a.tanggal) - ms(b.tanggal) || ms(a.dibuatPada) - ms(b.dibuatPada),
+        .includes(kata)
     );
+  });
+
+  // Ringkasan dari transaksi yang sedang tampil
+  const masuk = list.reduce((s, t) => s + Math.max(0, nilaiKas(t)), 0);
+  const keluar = list.reduce((s, t) => s + Math.max(0, -nilaiKas(t)), 0);
+  $("sum-masuk").textContent = rupiah(masuk);
+  $("sum-keluar").textContent = rupiah(keluar);
+  $("sum-bersih").textContent = rupiah(masuk - keluar);
 
   $("jumlah-riwayat").textContent = `${list.length} transaksi`;
   if (!list.length)
     return kosong(
       tbody,
       5,
-      kata ? "Tidak ada transaksi yang cocok" : "Belum ada transaksi",
+      kata || dari || sampai
+        ? "Tidak ada transaksi yang cocok"
+        : "Belum ada transaksi",
     );
 
   tbody.replaceChildren(
@@ -278,11 +305,17 @@ function renderRiwayat() {
         sel(n.teks, kelasNum(n.kelas)),
       );
 
-      const tdAksi = document.createElement("td");
+      const edit = document.createElement("button");
+      edit.className = "edit-button";
+      edit.type = "button";
+      edit.innerHTML = svgIkon("pencil");
+      edit.setAttribute("aria-label", "Edit transaksi");
+      edit.addEventListener("click", () => mulaiEdit(t));
+
       const hapus = document.createElement("button");
       hapus.className = "delete-button";
       hapus.type = "button";
-      hapus.textContent = "×";
+      hapus.innerHTML = svgIkon("x");
       hapus.setAttribute("aria-label", "Hapus transaksi");
       hapus.addEventListener("click", async () => {
         if (!confirm(`Hapus "${t.kategori}" sebesar ${rupiah(t.jumlah)}?`))
@@ -296,36 +329,19 @@ function renderRiwayat() {
           hapus.disabled = false;
         }
       });
-      tdAksi.appendChild(hapus);
+
+      const aksi = document.createElement("div");
+      aksi.className = "row-actions";
+      aksi.append(edit, hapus);
+      const tdAksi = document.createElement("td");
+      tdAksi.appendChild(aksi);
       tr.appendChild(tdAksi);
       return tr;
     }),
   );
 }
 
-// Tabel & total utang/piutang
-function renderCatatan(kunci) {
-  const list = semua.filter((t) => KATEGORI[t.kategori]?.[kunci]);
-  $(`total-${kunci}`).textContent = rupiah(totalProperti(kunci));
-
-  const tbody = $(`daftar-${kunci}`);
-  if (!list.length) return kosong(tbody, 3, `Belum ada ${kunci}`);
-  tbody.replaceChildren(
-    ...list.map((t) => {
-      const tr = document.createElement("tr");
-      const arah = KATEGORI[t.kategori][kunci]; // +1 menambah, −1 mengurangi
-      const teks = (arah < 0 ? "− " : "") + rupiah(t.jumlah);
-      tr.append(
-        sel(t.keterangan || t.kategori),
-        sel(tanggalTeks(t)),
-        sel(teks, kelasNum(arah < 0 ? "amount-out" : "")),
-      );
-      return tr;
-    }),
-  );
-}
-
-// Kartu saldo, modal, laba, rugi + donat
+// Kartu saldo, modal, laba, rugi + arus kas (donat, utang, piutang)
 function renderDashboard() {
   $("saldo").textContent = rupiah(semua.reduce((s, t) => s + nilaiKas(t), 0));
   $("modal").textContent = rupiah(totalProperti("modal"));
@@ -344,6 +360,8 @@ function renderDashboard() {
   $("total-arus").textContent = rupiah(total);
   $("total-masuk").textContent = rupiah(masuk);
   $("total-keluar").textContent = rupiah(keluar);
+  $("total-utang").textContent = rupiah(totalProperti("utang"));
+  $("total-piutang").textContent = rupiah(totalProperti("piutang"));
 }
 
 // Gambar ulang semua tampilan
@@ -351,8 +369,6 @@ function renderSemua() {
   renderDashboard();
   renderTerbaru();
   renderRiwayat();
-  renderCatatan("utang");
-  renderCatatan("piutang");
 }
 
 // Autentikasi: mode login/daftar
@@ -393,18 +409,9 @@ const pesanError = (code) =>
     "auth/invalid-email": "Format email tidak valid.",
     "auth/email-already-in-use": "Email sudah terdaftar. Silakan masuk.",
     "auth/weak-password": "Kata sandi minimal 6 karakter.",
-    "auth/missing-password": "Kata sandi harus diisi.",
-    "auth/wrong-password": "Email atau kata sandi salah.",
-    "auth/user-not-found": "Email atau kata sandi salah.",
     "auth/invalid-credential": "Email atau kata sandi salah.",
     "auth/too-many-requests": "Terlalu banyak percobaan. Coba lagi nanti.",
     "auth/network-request-failed": "Gagal terhubung. Periksa koneksi internet.",
-    "auth/operation-not-allowed":
-      "Aktifkan metode Email/Password di Firebase Console → Authentication.",
-    "auth/configuration-not-found":
-      "Firebase Authentication belum diaktifkan. Buka Console → Authentication → Get started.",
-    "auth/admin-restricted-operation":
-      "Pendaftaran dibatasi. Aktifkan Email/Password di Firebase Console.",
   })[code] || `Terjadi kesalahan${code ? ` (${code})` : ""}. Coba lagi.`;
 
 // Klik tab
@@ -447,9 +454,14 @@ $("btn-logout").addEventListener("click", () => signOut(auth));
 function mulaiListener(uid) {
   transaksiRef = collection(db, "tokos", uid, "transaksi");
   unsub = onSnapshot(
-    query(transaksiRef, orderBy("tanggal", "desc")),
+    transaksiRef,
     (snap) => {
-      semua = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      semua = snap.docs
+        .map((d) => ({
+          id: d.id,
+          ...d.data({ serverTimestamps: "estimate" }),
+        }))
+        .sort(urutTerbaru);
       dataSiap = true;
       renderSemua();
     },
@@ -475,6 +487,8 @@ function berhentiListener() {
 function tampilAplikasi(u) {
   berhentiListener();
   semua = [];
+  resetForm();
+  resetFilter();
   $("auth").classList.add("is-hidden");
   $("app-shell").classList.remove("is-hidden");
   $("user-email").textContent = u.email || "";
@@ -487,6 +501,8 @@ function tampilAplikasi(u) {
 function tampilAuth() {
   berhentiListener();
   semua = [];
+  resetForm();
+  resetFilter();
   $("app-shell").classList.add("is-hidden");
   $("auth").classList.remove("is-hidden");
   setMode("login");
@@ -495,12 +511,13 @@ function tampilAuth() {
 // Pantau status login
 onAuthStateChanged(auth, (u) => (u ? tampilAplikasi(u) : tampilAuth()));
 
-// Tombol navigasi (data-view)
-document
-  .querySelectorAll("[data-view]")
-  .forEach((el) =>
-    el.addEventListener("click", () => bukaView(el.dataset.view)),
-  );
+// Tombol navigasi (data-view); membuka Input dari menu = form baru
+document.querySelectorAll("[data-view]").forEach((el) =>
+  el.addEventListener("click", () => {
+    if (el.dataset.view === "input" && editId) resetForm();
+    bukaView(el.dataset.view);
+  }),
+);
 // Menu HP
 $("btn-menu").addEventListener("click", () =>
   document.querySelector(".sidebar").classList.toggle("open"),
@@ -511,34 +528,83 @@ $("brand-home").addEventListener("click", (e) => {
   bukaView("beranda");
 });
 
-// Submit form transaksi
 const form = $("form-transaksi");
+// Cegah scroll mouse mengubah angka di kolom Nominal
+form.jumlah.addEventListener("wheel", (e) => e.target.blur());
+
+// Kembalikan form ke mode "transaksi baru"
+function resetForm() {
+  editId = null;
+  form.reset();
+  isiKategori();
+  $("tanggal").value = isoHariIni();
+  $("judul-form").textContent = "Transaksi Baru";
+  $("btn-simpan").textContent = "Simpan";
+  $("btn-batal").classList.add("is-hidden");
+}
+
+// Isi form dengan data transaksi lama, lalu buka halaman Input (mode edit)
+function mulaiEdit(t) {
+  const info = KATEGORI[t.kategori];
+  editId = t.id;
+  $("jenis").value = info?.jenis || t.jenis || "debit";
+  isiKategori();
+  if (info) $("kategori").value = t.kategori;
+  $("tanggal").value = ymd(t) || isoHariIni();
+  form.jumlah.value = t.jumlah;
+  form.keterangan.value = t.keterangan || "";
+  $("judul-form").textContent = "Edit Transaksi";
+  $("btn-simpan").textContent = "Simpan Perubahan";
+  $("btn-batal").classList.remove("is-hidden");
+  bukaView("input");
+}
+
+// Submit form transaksi (baru atau edit)
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!dataSiap) return toast("Data belum selesai dimuat. Coba lagi sebentar.");
 
   const data = Object.fromEntries(new FormData(form));
-  const tombol = form.querySelector(".primary-button");
+  const tombol = $("btn-simpan");
+  const edit = !!editId;
   tombol.disabled = true;
   tombol.textContent = "Menyimpan...";
   try {
-    await tambahTransaksi(data);
-    form.reset();
-    isiKategori();
-    $("tanggal").value = isoHariIni();
-    toast("Transaksi berhasil disimpan.");
-    bukaView("beranda");
+    await simpanTransaksi(data);
+    resetForm();
+    resetFilter(); // hapus filter agar transaksi yang disimpan pasti terlihat
+    renderRiwayat();
+    toast(edit ? "Transaksi diperbarui." : "Transaksi berhasil disimpan.");
+    bukaView(edit ? "riwayat" : "beranda");
   } catch (err) {
     console.error(err);
     toast(err.message || "Transaksi gagal disimpan.");
   } finally {
     tombol.disabled = false;
-    tombol.textContent = "Simpan";
+    tombol.textContent = editId ? "Simpan Perubahan" : "Simpan";
   }
 });
 
+// Batal edit
+$("btn-batal").addEventListener("click", () => {
+  resetForm();
+  bukaView("riwayat");
+});
+
 // Inisialisasi awal
-$("cari").addEventListener("input", renderRiwayat);
+["cari", "filter-dari", "filter-sampai"].forEach((id) =>
+  $(id).addEventListener("input", renderRiwayat),
+);
+$("btn-reset-filter").addEventListener("click", () => {
+  resetFilter();
+  renderRiwayat();
+});
+// Ganti tema terang/gelap (pilihan disimpan di browser)
+$("btn-tema").addEventListener("click", () => {
+  const t = document.documentElement.dataset.tema === "dark" ? "light" : "dark";
+  document.documentElement.dataset.tema = t;
+  localStorage.setItem("tema", t);
+});
 $("jenis").addEventListener("change", isiKategori);
 isiKategori();
 $("tanggal").value = isoHariIni();

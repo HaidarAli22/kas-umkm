@@ -6,20 +6,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kas UMKM</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- Terapkan tema tersimpan lebih awal agar tidak berkedip -->
+    <script>
+      document.documentElement.dataset.tema =
+        localStorage.getItem("tema") ||
+        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    </script>
   </head>
   <body>
+    <!-- Semua ikon aplikasi diambil dari Lucide (https://lucide.dev).
+         Didefinisikan sekali di sini, lalu dipakai dengan <use href="#id" /> -->
+    <svg width="0" height="0" style="position: absolute">
+      <!-- Ikon dari Lucide (lucide.dev): wallet -->
+      <symbol id="logo" viewBox="0 0 24 24">
+        <path
+          d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"
+        />
+        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): menu -->
+      <symbol id="i-menu" viewBox="0 0 24 24">
+        <path d="M4 12h16" />
+        <path d="M4 18h16" />
+        <path d="M4 6h16" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): house -->
+      <symbol id="i-house" viewBox="0 0 24 24">
+        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
+        <path
+          d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+        />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): plus -->
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+        <path d="M12 5v14" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): history -->
+      <symbol id="i-history" viewBox="0 0 24 24">
+        <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+        <path d="M3 3v5h5" />
+        <path d="M12 7v5l4 2" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): banknote -->
+      <symbol id="i-banknote" viewBox="0 0 24 24">
+        <rect width="20" height="12" x="2" y="6" rx="2" />
+        <circle cx="12" cy="12" r="2" />
+        <path d="M6 12h.01M18 12h.01" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): coins -->
+      <symbol id="i-coins" viewBox="0 0 24 24">
+        <circle cx="8" cy="8" r="6" />
+        <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
+        <path d="M7 6h1v4" />
+        <path d="m16.71 13.88.7.71-2.82 2.82" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): trending-up -->
+      <symbol id="i-trending-up" viewBox="0 0 24 24">
+        <path d="M16 7h6v6" />
+        <path d="m22 7-8.5 8.5-5-5L2 17" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): trending-down -->
+      <symbol id="i-trending-down" viewBox="0 0 24 24">
+        <path d="M16 17h6v-6" />
+        <path d="m22 17-8.5-8.5-5 5L2 7" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): arrow-right -->
+      <symbol id="i-arrow-right" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+        <path d="m12 5 7 7-7 7" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): arrow-up-right -->
+      <symbol id="i-arrow-up-right" viewBox="0 0 24 24">
+        <path d="M7 7h10v10" />
+        <path d="M7 17 17 7" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): arrow-down-right -->
+      <symbol id="i-arrow-down-right" viewBox="0 0 24 24">
+        <path d="m7 7 10 10" />
+        <path d="M17 7v10H7" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): minus -->
+      <symbol id="i-minus" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): pencil -->
+      <symbol id="i-pencil" viewBox="0 0 24 24">
+        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+        <path d="m15 5 4 4" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): x -->
+      <symbol id="i-x" viewBox="0 0 24 24">
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): moon -->
+      <symbol id="i-moon" viewBox="0 0 24 24">
+        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): sun -->
+      <symbol id="i-sun" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2" />
+        <path d="M12 20v2" />
+        <path d="m4.93 4.93 1.41 1.41" />
+        <path d="m17.66 17.66 1.41 1.41" />
+        <path d="M2 12h2" />
+        <path d="M20 12h2" />
+        <path d="m6.34 17.66-1.41 1.41" />
+        <path d="m19.07 4.93-1.41 1.41" />
+      </symbol>
+      <!-- Ikon dari Lucide (lucide.dev): log-out -->
+      <symbol id="i-log-out" viewBox="0 0 24 24">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+        <path d="m16 17 5-5-5-5" />
+        <path d="M21 12H9" />
+      </symbol>
+    </svg>
+
     <!-- Splash screen -->
     <section id="splash" class="splash">
       <div class="splash-content">
         <div class="brand-mark large">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M8 15.5V11a3 3 0 0 1 3-3h25" />
-            <path
-              d="M8 15.5h29a3 3 0 0 1 3 3V37a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15.5Z"
-            />
-            <path d="M31 24h9v8h-9a4 4 0 0 1 0-8Z" />
-            <circle cx="32" cy="28" r="1" class="logo-dot" />
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none"><use href="#logo" /></svg>
         </div>
         <p class="eyebrow">PEMBUKUAN DIGITAL</p>
         <h1>Kas<span>UMKM</span></h1>
@@ -32,14 +141,7 @@
     <section id="auth" class="auth is-hidden">
       <div class="auth-card">
         <div class="brand-mark large">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M8 15.5V11a3 3 0 0 1 3-3h25" />
-            <path
-              d="M8 15.5h29a3 3 0 0 1 3 3V37a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15.5Z"
-            />
-            <path d="M31 24h9v8h-9a4 4 0 0 1 0-8Z" />
-            <circle cx="32" cy="28" r="1" class="logo-dot" />
-          </svg>
+          <svg viewBox="0 0 24 24" fill="none"><use href="#logo" /></svg>
         </div>
         <h1 class="auth-title">Kas<span>UMKM</span></h1>
         <p class="muted auth-subtitle">Masuk untuk mengelola kas usahamu.</p>
@@ -90,21 +192,25 @@
     <div id="app-shell" class="app-shell is-hidden">
       <!-- Topbar -->
       <header class="topbar">
-        <button class="icon-button menu-button" id="btn-menu">☰</button>
+        <button class="icon-button menu-button" id="btn-menu" aria-label="Menu">
+          <svg class="ikon"><use href="#i-menu" /></svg>
+        </button>
         <a class="brand" href="#" id="brand-home">
           <span class="brand-mark small">
-            <svg viewBox="0 0 48 48" fill="none">
-              <path d="M8 15.5V11a3 3 0 0 1 3-3h25" />
-              <path
-                d="M8 15.5h29a3 3 0 0 1 3 3V37a3 3 0 0 1-3 3H11a3 3 0 0 1-3-3V15.5Z"
-              />
-              <path d="M31 24h9v8h-9a4 4 0 0 1 0-8Z" />
-              <circle cx="32" cy="28" r="1" class="logo-dot" />
-            </svg>
+            <svg viewBox="0 0 24 24" fill="none"><use href="#logo" /></svg>
           </span>
           <span>Kas<span class="brand-accent">UMKM</span></span>
         </a>
         <div class="topbar-right">
+          <button
+            class="icon-button"
+            id="btn-tema"
+            title="Ganti tema"
+            aria-label="Ganti tema"
+          >
+            <svg class="ikon icon-moon"><use href="#i-moon" /></svg>
+            <svg class="ikon icon-sun"><use href="#i-sun" /></svg>
+          </button>
           <span class="user-email" id="user-email"></span>
           <button
             class="logout-button"
@@ -112,20 +218,7 @@
             title="Keluar"
             aria-label="Keluar"
           >
-            <svg
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <path d="m16 17 5-5-5-5" />
-              <path d="M21 12H9" />
-            </svg>
+            <svg class="ikon"><use href="#i-log-out" /></svg>
             <span class="logout-label">Keluar</span>
           </button>
         </div>
@@ -137,34 +230,18 @@
           <p class="nav-caption">MENU UTAMA</p>
           <button class="nav-item active" data-view="beranda">
             <span
-              ><svg
-                viewBox="0 0 24 24"
-                width="19"
-                height="19"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M3 10.5 12 3l9 7.5" />
-                <path
-                  d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"
-                /></svg></span
+              ><svg class="ikon"><use href="#i-house" /></svg></span
             >Dashboard
           </button>
           <button class="nav-item" data-view="input">
-            <span>＋</span>Input Transaksi
+            <span
+              ><svg class="ikon"><use href="#i-plus" /></svg></span
+            >Input Transaksi
           </button>
           <button class="nav-item" data-view="riwayat">
-            <span>↻</span>Riwayat
-          </button>
-          <p class="nav-caption nav-caption-spaced">PEMBUKUAN</p>
-          <button class="nav-item" data-view="utang">
-            <span>↗</span>Utang
-          </button>
-          <button class="nav-item" data-view="piutang">
-            <span>↙</span>Piutang
+            <span
+              ><svg class="ikon"><use href="#i-history" /></svg></span
+            >Riwayat
           </button>
           <div class="sidebar-footer">KAS UMKM v1.0</div>
         </aside>
@@ -175,7 +252,6 @@
             <div class="page-heading">
               <div>
                 <h1>Dashboard</h1>
-                <p class="muted">Pantau kondisi keuangan usahamu.</p>
               </div>
               <div class="date-chip"><span id="tanggal-hari"></span></div>
             </div>
@@ -183,25 +259,37 @@
             <div class="summary-grid">
               <article class="summary-card balance-card">
                 <div class="summary-top">
-                  <span>Saldo Kas</span><span class="summary-icon">▣</span>
+                  <span>Saldo Kas</span
+                  ><span class="summary-icon"
+                    ><svg class="ikon"><use href="#i-banknote" /></svg
+                  ></span>
                 </div>
                 <p class="summary-value" id="saldo">Rp 0</p>
               </article>
               <article class="summary-card">
                 <div class="summary-top">
-                  <span>Modal</span><span class="summary-icon">◈</span>
+                  <span>Modal</span
+                  ><span class="summary-icon"
+                    ><svg class="ikon"><use href="#i-coins" /></svg
+                  ></span>
                 </div>
                 <p class="summary-value" id="modal">Rp 0</p>
               </article>
               <article class="summary-card laba-card">
                 <div class="summary-top">
-                  <span>Laba</span><span class="summary-icon positive">↗</span>
+                  <span>Laba</span
+                  ><span class="summary-icon positive"
+                    ><svg class="ikon"><use href="#i-trending-up" /></svg
+                  ></span>
                 </div>
                 <p class="summary-value positive-text" id="laba">Rp 0</p>
               </article>
               <article class="summary-card rugi-card">
                 <div class="summary-top">
-                  <span>Rugi</span><span class="summary-icon negative">↘</span>
+                  <span>Rugi</span
+                  ><span class="summary-icon negative"
+                    ><svg class="ikon"><use href="#i-trending-down" /></svg
+                  ></span>
                 </div>
                 <p class="summary-value negative-text" id="rugi">Rp 0</p>
               </article>
@@ -211,7 +299,6 @@
             <article class="panel chart-panel">
               <div class="panel-heading">
                 <h2>Arus Kas</h2>
-                <p class="muted">Perbandingan kas masuk dan keluar</p>
               </div>
               <div class="chart-area">
                 <div id="pie" class="donut">
@@ -228,6 +315,15 @@
                     <span class="legend-swatch outflow"></span
                     ><span>Keluar</span><strong id="total-keluar">Rp 0</strong>
                   </div>
+                  <div>
+                    <span class="legend-swatch utang"></span><span>Utang</span
+                    ><strong id="total-utang">Rp 0</strong>
+                  </div>
+                  <div>
+                    <span class="legend-swatch piutang"></span
+                    ><span>Piutang</span
+                    ><strong id="total-piutang">Rp 0</strong>
+                  </div>
                 </div>
               </div>
             </article>
@@ -237,7 +333,8 @@
               <div class="panel-heading">
                 <h2>Transaksi Terbaru</h2>
                 <button class="link-button" data-view="riwayat">
-                  Lihat semua →
+                  Lihat semua
+                  <svg class="ikon"><use href="#i-arrow-right" /></svg>
                 </button>
               </div>
               <div class="table-wrap">
@@ -267,7 +364,7 @@
             <div class="page-heading">
               <div>
                 <p class="eyebrow">INPUT</p>
-                <h1>Transaksi Baru</h1>
+                <h1 id="judul-form">Transaksi Baru</h1>
               </div>
             </div>
             <form id="form-transaksi" class="panel">
@@ -295,7 +392,18 @@
               <label
                 >Keterangan<textarea name="keterangan" rows="3"></textarea>
               </label>
-              <button class="primary-button" type="submit">Simpan</button>
+              <div class="form-actions">
+                <button class="primary-button" type="submit" id="btn-simpan">
+                  Simpan
+                </button>
+                <button
+                  class="ghost-button is-hidden"
+                  type="button"
+                  id="btn-batal"
+                >
+                  Batal
+                </button>
+              </div>
             </form>
           </section>
 
@@ -307,7 +415,7 @@
                 <h1>Transaksi</h1>
               </div>
               <button class="primary-button compact" data-view="input">
-                ＋ Baru
+                <svg class="ikon"><use href="#i-plus" /></svg> Baru
               </button>
             </div>
             <div class="panel">
@@ -316,6 +424,25 @@
                   ><input type="search" id="cari" placeholder="Cari..."
                 /></label>
                 <span id="jumlah-riwayat" class="muted">0</span>
+              </div>
+              <div class="filter-row">
+                <label>Dari<input type="date" id="filter-dari" /></label>
+                <label>Sampai<input type="date" id="filter-sampai" /></label>
+                <button type="button" class="link-button" id="btn-reset-filter">
+                  Reset
+                </button>
+              </div>
+              <div class="sum-row">
+                <div class="sum-chip">
+                  Masuk <strong class="amount-in" id="sum-masuk">Rp 0</strong>
+                </div>
+                <div class="sum-chip">
+                  Keluar
+                  <strong class="amount-out" id="sum-keluar">Rp 0</strong>
+                </div>
+                <div class="sum-chip">
+                  Selisih <strong id="sum-bersih">Rp 0</strong>
+                </div>
               </div>
               <div class="table-wrap">
                 <table>
@@ -329,60 +456,6 @@
                     </tr>
                   </thead>
                   <tbody id="daftar-riwayat"></tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-
-          <!-- Halaman Utang -->
-          <section class="view" id="view-utang">
-            <div class="page-heading">
-              <div>
-                <p class="eyebrow">UTANG</p>
-                <h1>Utang Usaha</h1>
-              </div>
-            </div>
-            <div class="debt-total-panel">
-              <strong id="total-utang">Rp 0</strong>
-            </div>
-            <div class="panel">
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Keterangan</th>
-                      <th>Tanggal</th>
-                      <th class="col-num">Nominal</th>
-                    </tr>
-                  </thead>
-                  <tbody id="daftar-utang"></tbody>
-                </table>
-              </div>
-            </div>
-          </section>
-
-          <!-- Halaman Piutang -->
-          <section class="view" id="view-piutang">
-            <div class="page-heading">
-              <div>
-                <p class="eyebrow">PIUTANG</p>
-                <h1>Piutang</h1>
-              </div>
-            </div>
-            <div class="debt-total-panel receivable">
-              <strong id="total-piutang">Rp 0</strong>
-            </div>
-            <div class="panel">
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Keterangan</th>
-                      <th>Tanggal</th>
-                      <th class="col-num">Nominal</th>
-                    </tr>
-                  </thead>
-                  <tbody id="daftar-piutang"></tbody>
                 </table>
               </div>
             </div>
