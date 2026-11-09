@@ -1,12 +1,10 @@
 <!doctype html>
-<!-- index.html: kerangka tampilan; isi diisi app.js -->
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kas UMKM</title>
     <link rel="stylesheet" href="style.css" />
-    <!-- Terapkan tema tersimpan lebih awal agar tidak berkedip -->
     <script>
       document.documentElement.dataset.tema =
         localStorage.getItem("tema") ||
@@ -14,97 +12,77 @@
     </script>
   </head>
   <body>
-    <!-- Semua ikon aplikasi diambil dari Lucide (https://lucide.dev).
-         Didefinisikan sekali di sini, lalu dipakai dengan <use href="#id" /> -->
+    <!-- SVG Icons -->
     <svg width="0" height="0" style="position: absolute">
-      <!-- Ikon dari Lucide (lucide.dev): wallet -->
       <symbol id="logo" viewBox="0 0 24 24">
         <path
           d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"
         />
         <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): menu -->
       <symbol id="i-menu" viewBox="0 0 24 24">
         <path d="M4 12h16" />
         <path d="M4 18h16" />
         <path d="M4 6h16" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): house -->
       <symbol id="i-house" viewBox="0 0 24 24">
         <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
         <path
           d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
         />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): plus -->
       <symbol id="i-plus" viewBox="0 0 24 24">
         <path d="M5 12h14" />
         <path d="M12 5v14" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): history -->
       <symbol id="i-history" viewBox="0 0 24 24">
         <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
         <path d="M3 3v5h5" />
         <path d="M12 7v5l4 2" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): banknote -->
       <symbol id="i-banknote" viewBox="0 0 24 24">
         <rect width="20" height="12" x="2" y="6" rx="2" />
         <circle cx="12" cy="12" r="2" />
         <path d="M6 12h.01M18 12h.01" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): coins -->
       <symbol id="i-coins" viewBox="0 0 24 24">
         <circle cx="8" cy="8" r="6" />
         <path d="M18.09 10.37A6 6 0 1 1 10.34 18" />
         <path d="M7 6h1v4" />
         <path d="m16.71 13.88.7.71-2.82 2.82" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): trending-up -->
       <symbol id="i-trending-up" viewBox="0 0 24 24">
         <path d="M16 7h6v6" />
         <path d="m22 7-8.5 8.5-5-5L2 17" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): trending-down -->
       <symbol id="i-trending-down" viewBox="0 0 24 24">
         <path d="M16 17h6v-6" />
         <path d="m22 17-8.5-8.5-5 5L2 7" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): arrow-right -->
       <symbol id="i-arrow-right" viewBox="0 0 24 24">
         <path d="M5 12h14" />
         <path d="m12 5 7 7-7 7" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): arrow-up-right -->
       <symbol id="i-arrow-up-right" viewBox="0 0 24 24">
         <path d="M7 7h10v10" />
         <path d="M7 17 17 7" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): arrow-down-right -->
       <symbol id="i-arrow-down-right" viewBox="0 0 24 24">
         <path d="m7 7 10 10" />
         <path d="M17 7v10H7" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): minus -->
-      <symbol id="i-minus" viewBox="0 0 24 24">
-        <path d="M5 12h14" />
-      </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): pencil -->
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol>
       <symbol id="i-pencil" viewBox="0 0 24 24">
         <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
         <path d="m15 5 4 4" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): x -->
       <symbol id="i-x" viewBox="0 0 24 24">
         <path d="M18 6 6 18" />
         <path d="m6 6 12 12" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): moon -->
       <symbol id="i-moon" viewBox="0 0 24 24">
         <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): sun -->
       <symbol id="i-sun" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="4" />
         <path d="M12 2v2" />
@@ -116,7 +94,6 @@
         <path d="m6.34 17.66-1.41 1.41" />
         <path d="m19.07 4.93-1.41 1.41" />
       </symbol>
-      <!-- Ikon dari Lucide (lucide.dev): log-out -->
       <symbol id="i-log-out" viewBox="0 0 24 24">
         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
         <path d="m16 17 5-5-5-5" />
@@ -145,7 +122,6 @@
         </div>
         <h1 class="auth-title">Kas<span>UMKM</span></h1>
         <p class="muted auth-subtitle">Masuk untuk mengelola kas usahamu.</p>
-
         <div class="auth-tabs">
           <button type="button" id="tab-login" class="auth-tab active">
             Masuk
@@ -154,7 +130,6 @@
             Daftar
           </button>
         </div>
-
         <form id="form-auth" class="auth-form">
           <label
             >Email<input
@@ -188,17 +163,16 @@
       </div>
     </section>
 
-    <!-- Aplikasi utama (setelah login) -->
+    <!-- Aplikasi utama -->
     <div id="app-shell" class="app-shell is-hidden">
-      <!-- Topbar -->
       <header class="topbar">
         <button class="icon-button menu-button" id="btn-menu" aria-label="Menu">
           <svg class="ikon"><use href="#i-menu" /></svg>
         </button>
         <a class="brand" href="#" id="brand-home">
-          <span class="brand-mark small">
-            <svg viewBox="0 0 24 24" fill="none"><use href="#logo" /></svg>
-          </span>
+          <span class="brand-mark small"
+            ><svg viewBox="0 0 24 24" fill="none"><use href="#logo" /></svg
+          ></span>
           <span>Kas<span class="brand-accent">UMKM</span></span>
         </a>
         <div class="topbar-right">
@@ -225,7 +199,6 @@
       </header>
 
       <div class="layout">
-        <!-- Sidebar menu -->
         <aside class="sidebar" id="sidebar">
           <p class="nav-caption">MENU UTAMA</p>
           <button class="nav-item active" data-view="beranda">
@@ -250,12 +223,9 @@
           <!-- Halaman Dashboard -->
           <section class="view active" id="view-beranda">
             <div class="page-heading">
-              <div>
-                <h1>Dashboard</h1>
-              </div>
+              <div><h1>Dashboard</h1></div>
               <div class="date-chip"><span id="tanggal-hari"></span></div>
             </div>
-
             <div class="summary-grid">
               <article class="summary-card balance-card">
                 <div class="summary-top">
@@ -294,12 +264,8 @@
                 <p class="summary-value negative-text" id="rugi">Rp 0</p>
               </article>
             </div>
-
-            <!-- Grafik arus kas -->
             <article class="panel chart-panel">
-              <div class="panel-heading">
-                <h2>Arus Kas</h2>
-              </div>
+              <div class="panel-heading"><h2>Arus Kas</h2></div>
               <div class="chart-area">
                 <div id="pie" class="donut">
                   <div class="donut-center">
@@ -327,8 +293,6 @@
                 </div>
               </div>
             </article>
-
-            <!-- Transaksi terbaru -->
             <article class="panel recent-panel">
               <div class="panel-heading">
                 <h2>Transaksi Terbaru</h2>
@@ -462,10 +426,23 @@
           </section>
         </main>
       </div>
-      <!-- Notifikasi -->
+
+      <!-- Notifikasi Toast -->
       <div id="toast" class="toast"></div>
+
+      <!-- Modal Konfirmasi Kustom (Pop Up) -->
+      <div id="confirm-modal" class="modal-overlay is-hidden">
+        <div class="modal-card">
+          <h3 id="modal-title">Konfirmasi</h3>
+          <p id="modal-message">Apakah Anda yakin?</p>
+          <div class="modal-actions">
+            <button id="modal-cancel" class="ghost-button">Batal</button>
+            <button id="modal-confirm" class="primary-button">Ya</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- Muat app.js -->
+
     <script type="module" src="app.js"></script>
   </body>
 </html>
