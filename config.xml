@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.kasumkm.app" version="1.0.0"
+    xmlns="http://www.w3.org/ns/widgets"
+    xmlns:cdv="http://cordova.apache.org/ns/1.0">
+
+    <name>Kas UMKM</name>
+    <description>Aplikasi pencatatan keuangan UMKM</description>
+    <author email="admin@kasumkm.app" href="https://cordova.apache.org">
+        Kas UMKM
+    </author>
+
+    <content src="index.html" />
+
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+
+    <preference name="AndroidXEnabled" value="true" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="BackupWebStorage" value="local" />
+
+</widget>
