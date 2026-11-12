@@ -1,4 +1,4 @@
-/* style.css: tampilan aplikasi. Variabel warna & ukuran */
+/* ----- Variabel warna (tema terang) ----- */
 :root {
   --bg: #ffffff;
   --bg-soft: #f8f9fa;
@@ -20,6 +20,7 @@
   --topbar: rgba(255, 255, 255, 0.95);
 }
 
+/* ----- Variabel warna (tema gelap) ----- */
 :root[data-tema="dark"] {
   color-scheme: dark;
   --bg: #0f1115;
@@ -36,6 +37,7 @@
   --topbar: rgba(15, 17, 21, 0.92);
 }
 
+/* ----- Pengaturan dasar ----- */
 * {
   box-sizing: border-box;
 }
@@ -68,13 +70,15 @@ input:focus-visible {
   outline-offset: 3px;
 }
 
+/* Class bantu */
 .is-hidden {
   display: none !important;
-}
+} /* menyembunyikan elemen */
 .muted {
   color: var(--muted);
-}
+} /* teks abu-abu */
 .eyebrow {
+  /* teks kecil di atas judul */
   margin: 0 0 9px;
   color: var(--green);
   font-size: 10px;
@@ -82,7 +86,7 @@ input:focus-visible {
   letter-spacing: 0.19em;
 }
 
-/* Splash screen */
+/* ----- Splash screen ----- */
 .splash {
   position: fixed;
   inset: 0;
@@ -95,7 +99,7 @@ input:focus-visible {
 .splash.leaving {
   opacity: 0;
   visibility: hidden;
-}
+} /* efek menghilang */
 .splash-content {
   display: flex;
   flex-direction: column;
@@ -106,6 +110,7 @@ input:focus-visible {
   animation: rise-in 0.8s ease;
 }
 .brand-mark {
+  /* kotak logo */
   display: grid;
   place-items: center;
   color: var(--green);
@@ -144,6 +149,7 @@ input:focus-visible {
   margin: 16px 0 6px;
 }
 .loading-track {
+  /* garis loading */
   width: 210px;
   height: 3px;
   background: var(--line);
@@ -159,6 +165,7 @@ input:focus-visible {
   animation: slide 1.25s infinite;
 }
 
+/* ----- Animasi ----- */
 @keyframes pulse {
   0%,
   100% {
@@ -187,7 +194,7 @@ input:focus-visible {
   }
 }
 
-/* Topbar */
+/* ----- Bar atas (topbar) ----- */
 .topbar {
   position: sticky;
   top: 0;
@@ -218,6 +225,7 @@ input:focus-visible {
   color: var(--green);
 }
 .icon-button {
+  /* tombol ikon (menu, tema) */
   display: grid;
   place-items: center;
   width: 36px;
@@ -234,7 +242,7 @@ input:focus-visible {
 }
 .menu-button {
   display: none;
-}
+} /* tampil hanya di layar kecil */
 .topbar-right {
   display: flex;
   align-items: center;
@@ -244,7 +252,7 @@ input:focus-visible {
   font-size: 11px;
 }
 
-/* Layout & sidebar */
+/* ----- Layout dan sidebar ----- */
 .layout {
   display: flex;
   min-height: calc(100vh - 72px);
@@ -267,6 +275,7 @@ input:focus-visible {
   letter-spacing: 0.17em;
 }
 .nav-item {
+  /* tombol menu sidebar */
   display: flex;
   align-items: center;
   gap: 12px;
@@ -292,6 +301,7 @@ input:focus-visible {
   border-color: var(--line);
 }
 .nav-item.active {
+  /* menu yang sedang dipilih */
   color: var(--green);
   border-color: var(--green-border);
   background: var(--green-soft);
@@ -313,14 +323,14 @@ input:focus-visible {
   padding: 35px clamp(20px, 3vw, 46px) 18px;
 }
 
-/* Pindah halaman */
+/* ----- Perpindahan halaman ----- */
 .view {
   display: none;
   animation: fadeIn 0.3s ease;
 }
 .view.active {
   display: block;
-}
+} /* hanya halaman aktif yang tampil */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -332,7 +342,7 @@ input:focus-visible {
   }
 }
 
-/* Judul halaman */
+/* ----- Judul halaman ----- */
 .page-heading {
   display: flex;
   align-items: center;
@@ -356,7 +366,7 @@ input:focus-visible {
   font-size: 11px;
 }
 
-/* Kartu ringkasan */
+/* ----- Kartu ringkasan ----- */
 .summary-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -418,6 +428,7 @@ input:focus-visible {
   color: var(--red);
 }
 
+/* ----- Panel umum ----- */
 .chart-panel {
   margin-top: 17px;
 }
@@ -437,7 +448,7 @@ input:focus-visible {
   color: var(--text);
 }
 
-/* Grafik donat */
+/* ----- Grafik donat ----- */
 .chart-area {
   display: flex;
   align-items: center;
@@ -455,6 +466,7 @@ input:focus-visible {
   position: relative;
 }
 .donut::after {
+  /* lubang tengah donat */
   position: absolute;
   inset: 13px;
   border: 1px solid var(--line);
@@ -479,6 +491,8 @@ input:focus-visible {
   font-size: 13px;
   color: var(--text);
 }
+
+/* Keterangan warna grafik */
 .legend {
   display: grid;
   gap: 20px;
@@ -521,6 +535,10 @@ input:focus-visible {
   margin-top: 17px;
 }
 .link-button {
+  /* tombol berbentuk teks link */
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 4px 0;
   color: var(--green);
   border: 0;
@@ -531,7 +549,7 @@ input:focus-visible {
   text-decoration: underline;
 }
 
-/* Form & tombol */
+/* ----- Form dan tombol ----- */
 label {
   display: grid;
   gap: 8px;
@@ -574,6 +592,7 @@ textarea:focus {
   gap: 16px;
 }
 .primary-button {
+  /* tombol utama (hijau) */
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -600,7 +619,7 @@ textarea:focus {
   white-space: nowrap;
 }
 
-/* Tabel */
+/* ----- Tabel ----- */
 .table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -664,17 +683,18 @@ tbody tr:hover td {
 .amount-in {
   color: var(--green);
   font-weight: 700;
-}
+} /* uang masuk */
 .amount-out {
   color: var(--red);
   font-weight: 700;
-}
+} /* uang keluar */
 .empty-cell {
   padding: 28px;
   color: var(--muted);
   text-align: center;
 }
 
+/* ----- Pencarian di riwayat ----- */
 .history-toolbar {
   display: flex;
   justify-content: space-between;
@@ -699,7 +719,7 @@ tbody tr:hover td {
   color: var(--text);
 }
 
-/* Halaman login */
+/* ----- Halaman login ----- */
 .auth {
   position: fixed;
   inset: 0;
@@ -737,6 +757,7 @@ tbody tr:hover td {
   margin: 0 0 28px;
 }
 .auth-tabs {
+  /* tab Masuk / Daftar */
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
@@ -821,7 +842,7 @@ tbody tr:hover td {
   background: var(--red);
 }
 
-/* Notifikasi */
+/* ----- Notifikasi (toast) ----- */
 .toast {
   position: fixed;
   right: 22px;
@@ -845,7 +866,7 @@ tbody tr:hover td {
   transform: translateY(0);
 }
 
-/* Ikon */
+/* ----- Ikon ----- */
 .ikon {
   flex-shrink: 0;
   width: 18px;
@@ -876,11 +897,6 @@ tbody tr:hover td {
   width: 15px;
   height: 15px;
 }
-.link-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
 .link-button .ikon {
   width: 13px;
   height: 13px;
@@ -896,6 +912,8 @@ tbody tr:hover td {
   width: 14px;
   height: 14px;
 }
+
+/* Ikon tema: bulan di mode terang, matahari di mode gelap */
 .icon-sun,
 :root[data-tema="dark"] .icon-moon {
   display: none;
@@ -904,12 +922,13 @@ tbody tr:hover td {
   display: block;
 }
 
-/* Form: tombol Simpan + Batal */
+/* ----- Tombol Simpan dan Batal ----- */
 .form-actions {
   display: flex;
   gap: 10px;
 }
 .ghost-button {
+  /* tombol sekunder (outline) */
   padding: 13px 17px;
   color: var(--muted);
   border: 1px solid var(--line);
@@ -922,7 +941,7 @@ tbody tr:hover td {
   color: var(--text);
 }
 
-/* Riwayat: filter, ringkasan, tombol edit/hapus */
+/* ----- Riwayat: filter, ringkasan, tombol edit/hapus ----- */
 .filter-row {
   display: flex;
   flex-wrap: wrap;
@@ -990,10 +1009,9 @@ tbody tr:hover td {
   color: white;
 }
 
-/* ========================================== */
-/* MODAL KONFIRMASI KUSTOM (POP UP)           */
-/* ========================================== */
+/* ----- Pop up konfirmasi ----- */
 .modal-overlay {
+  /* latar gelap di belakang pop up */
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -1047,12 +1065,14 @@ tbody tr:hover td {
   flex: 1;
 }
 
-/* Responsif */
+/* ----- Responsif: layar sedang ----- */
 @media (max-width: 1180px) {
   .summary-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ----- Responsif: tablet (sidebar jadi menu geser) ----- */
 @media (max-width: 850px) {
   .topbar {
     height: 62px;
@@ -1083,6 +1103,8 @@ tbody tr:hover td {
     grid-template-columns: 1fr;
   }
 }
+
+/* ----- Responsif: HP ----- */
 @media (max-width: 560px) {
   .user-email,
   .logout-label {

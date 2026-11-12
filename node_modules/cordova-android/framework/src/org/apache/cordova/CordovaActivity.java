@@ -1,4 +1,4 @@
-/**
+/*
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -121,8 +121,7 @@ public class CordovaActivity extends AppCompatActivity {
         // need to activate preferences before super.onCreate to avoid "requestFeature() must be called before adding content" exception
         loadConfig();
 
-        canEdgeToEdge = preferences.getBoolean("AndroidEdgeToEdge", false)
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM;
+        canEdgeToEdge = preferences.getBoolean("AndroidEdgeToEdge", false);
 
         String logLevel = preferences.getString("loglevel", "ERROR");
         LOG.setLogLevel(logLevel);
@@ -226,13 +225,22 @@ public class CordovaActivity extends AppCompatActivity {
 
             boolean isStatusBarVisible = statusBarView.getVisibility() != View.GONE;
             int top = isStatusBarVisible && !canEdgeToEdge && !isFullScreen ? bars.top : 0;
-            int bottom = !canEdgeToEdge && !isFullScreen ? bars.bottom : 0;
             int left = !canEdgeToEdge && !isFullScreen ? bars.left : 0;
             int right = !canEdgeToEdge && !isFullScreen ? bars.right : 0;
 
+            Insets imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime());
+            // When in fullscreen mode, we ignore bottom system insets (like the navigation bar)
+            // to allow the WebView to span the entire screen and avoid being pushed up.
+            int bottom = isFullScreen ? 0 : canEdgeToEdge ? imeInsets.bottom : Math.max(bars.bottom, imeInsets.bottom);
+
             FrameLayout.LayoutParams webViewParams = (FrameLayout.LayoutParams) webView.getLayoutParams();
-            webViewParams.setMargins(left, top, right, bottom);
-            webView.setLayoutParams(webViewParams);
+            // Only update layout margins if the values have actually changed.
+            // This prevents redundant layout passes and potential infinite layout loops
+            if (webViewParams.leftMargin != left || webViewParams.topMargin != top
+                    || webViewParams.rightMargin != right || webViewParams.bottomMargin != bottom) {
+                webViewParams.setMargins(left, top, right, bottom);
+                webView.setLayoutParams(webViewParams);
+            }
 
             FrameLayout.LayoutParams statusBarParams = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -578,7 +586,7 @@ public class CordovaActivity extends AppCompatActivity {
 
         try
         {
-            cordovaInterface.onRequestPermissionResult(requestCode, permissions, grantResults);
+            cordovaInterface.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
         catch (JSONException e)
         {

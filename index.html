@@ -5,14 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kas UMKM</title>
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Script untuk menentukan tema (terang/gelap) sebelum halaman tampil -->
     <script>
-      document.documentElement.dataset.tema =
-        localStorage.getItem("tema") ||
-        (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      var temaTersimpan = localStorage.getItem("tema");
+      if (temaTersimpan) {
+        document.documentElement.dataset.tema = temaTersimpan;
+      } else if (matchMedia("(prefers-color-scheme: dark)").matches) {
+        document.documentElement.dataset.tema = "dark";
+      } else {
+        document.documentElement.dataset.tema = "light";
+      }
     </script>
   </head>
   <body>
-    <!-- SVG Icons -->
+    <!-- ================= KUMPULAN IKON SVG ================= -->
+    <!-- Ikon disimpan di sini lalu dipanggil dengan <use href="#id-ikon"> -->
     <svg width="0" height="0" style="position: absolute">
       <symbol id="logo" viewBox="0 0 24 24">
         <path
@@ -71,7 +79,9 @@
         <path d="m7 7 10 10" />
         <path d="M17 7v10H7" />
       </symbol>
-      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24">
+        <path d="M5 12h14" />
+      </symbol>
       <symbol id="i-pencil" viewBox="0 0 24 24">
         <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
         <path d="m15 5 4 4" />
@@ -101,7 +111,8 @@
       </symbol>
     </svg>
 
-    <!-- Splash screen -->
+    <!-- ================= SPLASH SCREEN ================= -->
+    <!-- Tampilan pembuka aplikasi (hilang otomatis setelah beberapa detik) -->
     <section id="splash" class="splash">
       <div class="splash-content">
         <div class="brand-mark large">
@@ -114,7 +125,7 @@
       </div>
     </section>
 
-    <!-- Login / Daftar -->
+    <!-- ================= HALAMAN LOGIN / DAFTAR ================= -->
     <section id="auth" class="auth is-hidden">
       <div class="auth-card">
         <div class="brand-mark large">
@@ -122,6 +133,8 @@
         </div>
         <h1 class="auth-title">Kas<span>UMKM</span></h1>
         <p class="muted auth-subtitle">Masuk untuk mengelola kas usahamu.</p>
+
+        <!-- Tombol pindah antara mode Masuk dan Daftar -->
         <div class="auth-tabs">
           <button type="button" id="tab-login" class="auth-tab active">
             Masuk
@@ -130,49 +143,61 @@
             Daftar
           </button>
         </div>
+
+        <!-- Form email dan kata sandi -->
         <form id="form-auth" class="auth-form">
-          <label
-            >Email<input
+          <label>
+            Email
+            <input
               type="email"
               id="auth-email"
               autocomplete="email"
               placeholder="nama@email.com"
               required
-          /></label>
-          <label
-            >Kata sandi<input
+            />
+          </label>
+          <label>
+            Kata sandi
+            <input
               type="password"
               id="auth-password"
               autocomplete="current-password"
               placeholder="Minimal 6 karakter"
               minlength="6"
               required
-          /></label>
-          <label id="auth-konfirmasi-wrap" class="is-hidden"
-            >Ulangi kata sandi<input
+            />
+          </label>
+          <!-- Kolom ini hanya muncul saat mode Daftar -->
+          <label id="auth-konfirmasi-wrap" class="is-hidden">
+            Ulangi kata sandi
+            <input
               type="password"
               id="auth-konfirmasi"
               autocomplete="new-password"
               placeholder="Ketik ulang kata sandi"
-          /></label>
+            />
+          </label>
           <button type="submit" class="primary-button" id="auth-submit">
             Masuk
           </button>
         </form>
+
+        <!-- Tempat pesan error / info login -->
         <p id="auth-pesan" class="auth-pesan"></p>
       </div>
     </section>
 
-    <!-- Aplikasi utama -->
+    <!-- ================= APLIKASI UTAMA ================= -->
     <div id="app-shell" class="app-shell is-hidden">
+      <!-- Bar atas: menu, logo, tema, email, keluar -->
       <header class="topbar">
         <button class="icon-button menu-button" id="btn-menu" aria-label="Menu">
           <svg class="ikon"><use href="#i-menu" /></svg>
         </button>
         <a class="brand" href="#" id="brand-home">
-          <span class="brand-mark small"
-            ><svg viewBox="0 0 24 24" fill="none"><use href="#logo" /></svg
-          ></span>
+          <span class="brand-mark small">
+            <svg viewBox="0 0 24 24" fill="none"><use href="#logo" /></svg>
+          </span>
           <span>Kas<span class="brand-accent">UMKM</span></span>
         </a>
         <div class="topbar-right">
@@ -199,6 +224,7 @@
       </header>
 
       <div class="layout">
+        <!-- Menu samping (sidebar) -->
         <aside class="sidebar" id="sidebar">
           <p class="nav-caption">MENU UTAMA</p>
           <button class="nav-item active" data-view="beranda">
@@ -220,17 +246,19 @@
         </aside>
 
         <main class="main-content">
-          <!-- Halaman Dashboard -->
+          <!-- ========== HALAMAN DASHBOARD ========== -->
           <section class="view active" id="view-beranda">
             <div class="page-heading">
               <div><h1>Dashboard</h1></div>
               <div class="date-chip"><span id="tanggal-hari"></span></div>
             </div>
+
+            <!-- 4 kartu ringkasan: saldo, modal, laba, rugi -->
             <div class="summary-grid">
               <article class="summary-card balance-card">
                 <div class="summary-top">
-                  <span>Saldo Kas</span
-                  ><span class="summary-icon"
+                  <span>Saldo Kas</span>
+                  <span class="summary-icon"
                     ><svg class="ikon"><use href="#i-banknote" /></svg
                   ></span>
                 </div>
@@ -238,8 +266,8 @@
               </article>
               <article class="summary-card">
                 <div class="summary-top">
-                  <span>Modal</span
-                  ><span class="summary-icon"
+                  <span>Modal</span>
+                  <span class="summary-icon"
                     ><svg class="ikon"><use href="#i-coins" /></svg
                   ></span>
                 </div>
@@ -247,8 +275,8 @@
               </article>
               <article class="summary-card laba-card">
                 <div class="summary-top">
-                  <span>Laba</span
-                  ><span class="summary-icon positive"
+                  <span>Laba</span>
+                  <span class="summary-icon positive"
                     ><svg class="ikon"><use href="#i-trending-up" /></svg
                   ></span>
                 </div>
@@ -256,43 +284,51 @@
               </article>
               <article class="summary-card rugi-card">
                 <div class="summary-top">
-                  <span>Rugi</span
-                  ><span class="summary-icon negative"
+                  <span>Rugi</span>
+                  <span class="summary-icon negative"
                     ><svg class="ikon"><use href="#i-trending-down" /></svg
                   ></span>
                 </div>
                 <p class="summary-value negative-text" id="rugi">Rp 0</p>
               </article>
             </div>
+
+            <!-- Grafik donat arus kas + keterangan angka -->
             <article class="panel chart-panel">
               <div class="panel-heading"><h2>Arus Kas</h2></div>
               <div class="chart-area">
                 <div id="pie" class="donut">
                   <div class="donut-center">
-                    <span>Total</span><strong id="total-arus">Rp 0</strong>
+                    <span>Total</span>
+                    <strong id="total-arus">Rp 0</strong>
                   </div>
                 </div>
                 <div class="legend">
                   <div>
-                    <span class="legend-swatch inflow"></span><span>Masuk</span
-                    ><strong id="total-masuk">Rp 0</strong>
+                    <span class="legend-swatch inflow"></span>
+                    <span>Masuk</span>
+                    <strong id="total-masuk">Rp 0</strong>
                   </div>
                   <div>
-                    <span class="legend-swatch outflow"></span
-                    ><span>Keluar</span><strong id="total-keluar">Rp 0</strong>
+                    <span class="legend-swatch outflow"></span>
+                    <span>Keluar</span>
+                    <strong id="total-keluar">Rp 0</strong>
                   </div>
                   <div>
-                    <span class="legend-swatch utang"></span><span>Utang</span
-                    ><strong id="total-utang">Rp 0</strong>
+                    <span class="legend-swatch utang"></span>
+                    <span>Utang</span>
+                    <strong id="total-utang">Rp 0</strong>
                   </div>
                   <div>
-                    <span class="legend-swatch piutang"></span
-                    ><span>Piutang</span
-                    ><strong id="total-piutang">Rp 0</strong>
+                    <span class="legend-swatch piutang"></span>
+                    <span>Piutang</span>
+                    <strong id="total-piutang">Rp 0</strong>
                   </div>
                 </div>
               </div>
             </article>
+
+            <!-- Tabel 5 transaksi terbaru -->
             <article class="panel recent-panel">
               <div class="panel-heading">
                 <h2>Transaksi Terbaru</h2>
@@ -323,7 +359,7 @@
             </article>
           </section>
 
-          <!-- Halaman Input Transaksi -->
+          <!-- ========== HALAMAN INPUT TRANSAKSI ========== -->
           <section class="view" id="view-input">
             <div class="page-heading">
               <div>
@@ -331,35 +367,40 @@
                 <h1 id="judul-form">Transaksi Baru</h1>
               </div>
             </div>
+
+            <!-- Form tambah / edit transaksi -->
             <form id="form-transaksi" class="panel">
-              <label
-                >Jenis<select name="jenis" id="jenis" required>
+              <label>
+                Jenis
+                <select name="jenis" id="jenis" required>
                   <option value="debit">Debit</option>
                   <option value="kredit">Kredit</option>
-                </select></label
-              >
+                </select>
+              </label>
               <div class="form-row">
-                <label
-                  >Tanggal<input
-                    type="date"
-                    name="tanggal"
-                    id="tanggal"
-                    required
-                /></label>
-                <label
-                  >Nominal<input type="number" name="jumlah" min="1" required
-                /></label>
+                <label>
+                  Tanggal
+                  <input type="date" name="tanggal" id="tanggal" required />
+                </label>
+                <label>
+                  Nominal
+                  <input type="number" name="jumlah" min="1" required />
+                </label>
               </div>
-              <label
-                >Kategori<select name="kategori" id="kategori" required></select
-              ></label>
-              <label
-                >Keterangan<textarea name="keterangan" rows="3"></textarea>
+              <label>
+                Kategori
+                <!-- Pilihan kategori diisi otomatis lewat app.js -->
+                <select name="kategori" id="kategori" required></select>
+              </label>
+              <label>
+                Keterangan
+                <textarea name="keterangan" rows="3"></textarea>
               </label>
               <div class="form-actions">
                 <button class="primary-button" type="submit" id="btn-simpan">
                   Simpan
                 </button>
+                <!-- Tombol Batal hanya muncul saat mode edit -->
                 <button
                   class="ghost-button is-hidden"
                   type="button"
@@ -371,7 +412,7 @@
             </form>
           </section>
 
-          <!-- Halaman Riwayat -->
+          <!-- ========== HALAMAN RIWAYAT ========== -->
           <section class="view" id="view-riwayat">
             <div class="page-heading">
               <div>
@@ -382,13 +423,17 @@
                 <svg class="ikon"><use href="#i-plus" /></svg> Baru
               </button>
             </div>
+
             <div class="panel">
+              <!-- Kolom pencarian dan jumlah data -->
               <div class="history-toolbar">
-                <label class="search-box"
-                  ><input type="search" id="cari" placeholder="Cari..."
-                /></label>
+                <label class="search-box">
+                  <input type="search" id="cari" placeholder="Cari..." />
+                </label>
                 <span id="jumlah-riwayat" class="muted">0</span>
               </div>
+
+              <!-- Filter berdasarkan tanggal -->
               <div class="filter-row">
                 <label>Dari<input type="date" id="filter-dari" /></label>
                 <label>Sampai<input type="date" id="filter-sampai" /></label>
@@ -396,6 +441,8 @@
                   Reset
                 </button>
               </div>
+
+              <!-- Total masuk, keluar, dan selisih dari data yang tampil -->
               <div class="sum-row">
                 <div class="sum-chip">
                   Masuk <strong class="amount-in" id="sum-masuk">Rp 0</strong>
@@ -408,6 +455,8 @@
                   Selisih <strong id="sum-bersih">Rp 0</strong>
                 </div>
               </div>
+
+              <!-- Tabel semua transaksi -->
               <div class="table-wrap">
                 <table>
                   <thead>
@@ -427,10 +476,10 @@
         </main>
       </div>
 
-      <!-- Notifikasi Toast -->
+      <!-- Notifikasi kecil (toast) di pojok kanan bawah -->
       <div id="toast" class="toast"></div>
 
-      <!-- Modal Konfirmasi Kustom (Pop Up) -->
+      <!-- Pop up konfirmasi (hapus, edit, keluar) -->
       <div id="confirm-modal" class="modal-overlay is-hidden">
         <div class="modal-card">
           <h3 id="modal-title">Konfirmasi</h3>
@@ -443,6 +492,7 @@
       </div>
     </div>
 
+    <!-- File JavaScript utama (type module karena memakai import Firebase) -->
     <script type="module" src="app.js"></script>
   </body>
 </html>
